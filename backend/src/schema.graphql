@@ -1,0 +1,64 @@
+"Eine Pflanze, die gepflegt werden will"
+type Plant {
+  id: ID!
+  name: String!
+  location: String!
+  "Anzahl Tage zwischen zwei Gießvorgängen"
+  wateringInterval: Int!
+  "ISO-Datum, YYYY-MM-DD"
+  lastWatered: String
+  notes: String
+}
+
+"Feld, nach dem die Pflanzen sortiert werden"
+enum PlantOrderBy {
+  ID
+  NAME
+  LOCATION
+  LAST_WATERED
+  WATERING_INTERVAL
+}
+
+type Query {
+  """
+  Alle Pflanzen.
+
+  Mit `simulateError: true` wirft der Server absichtlich einen Fehler
+  (für die Error-Boundary-Übung im Workshop).
+  """
+  plants(orderBy: PlantOrderBy = ID, simulateError: Boolean = false): [Plant!]!
+
+  "Eine einzelne Pflanze. Ist die id unbekannt, kommt `null` zurück."
+  plant(id: ID!): Plant
+}
+
+input CreatePlantInput {
+  name: String!
+  location: String!
+  wateringInterval: Int!
+  "ISO-Datum, YYYY-MM-DD"
+  lastWatered: String
+  notes: String
+}
+
+type CreatePlantSuccess {
+  plant: Plant!
+}
+
+type CreatePlantError {
+  "Alle Validierungsfehler, zu einem Text zusammengefasst"
+  msg: String!
+}
+
+union CreatePlantPayload = CreatePlantSuccess | CreatePlantError
+
+type Mutation {
+  "Legt eine neue Pflanze an. Validierungsfehler kommen als CreatePlantError zurück."
+  createPlant(input: CreatePlantInput!): CreatePlantPayload!
+
+  """
+  Setzt das Gieß-Datum einer Pflanze.
+  Ohne `lastWatered` wird das heutige Datum gesetzt.
+  """
+  waterPlant(id: ID!, lastWatered: String): Plant
+}

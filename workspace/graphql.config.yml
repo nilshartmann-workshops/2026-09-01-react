@@ -1,0 +1,7 @@
+# Diese Datei lesen die GraphQL-Plug-ins von IntelliJ/WebStorm und VS Code.
+# Damit bekommst du Autovervollständigung und Validierung gegen unser Schema
+# auch direkt in den gql`...`-Templates im TypeScript-Code.
+#
+# Wichtig: Das Backend muss laufen, sonst kann das Schema nicht geladen werden.
+schema: http://localhost:7200/graphql
+documents: "src/**/*.{ts,tsx,graphql}"

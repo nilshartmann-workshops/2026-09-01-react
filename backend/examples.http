@@ -1,0 +1,76 @@
+### Zum Ausprobieren lieber GraphiQL: http://localhost:7200/graphql
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "query GetPlants { plants { id name location wateringInterval lastWatered } }"
+}
+
+###
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "query GetPlant($id: ID!) { plant(id: $id) { id name notes } }",
+  "variables": { "id": "1" }
+}
+
+### Fehler provozieren (für die Error-Boundary-Übung)
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "{ plants(simulateError: true) { id } }"
+}
+
+### Anlegen: Erfolgsfall
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "mutation CreatePlant($input: CreatePlantInput!) { createPlant(input: $input) { ... on CreatePlantSuccess { plant { id name } } ... on CreatePlantError { msg } } }",
+  "variables": {
+    "input": {
+      "name": "Rosi Rose",
+      "location": "Wohnzimmer",
+      "wateringInterval": 4,
+      "lastWatered": "2026-08-27",
+      "notes": "Blüten schneiden!"
+    }
+  }
+}
+
+### Anlegen: Fehlerfall (Name aus lauter Großbuchstaben)
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "mutation CreatePlant($input: CreatePlantInput!) { createPlant(input: $input) { ... on CreatePlantSuccess { plant { id } } ... on CreatePlantError { msg } } }",
+  "variables": {
+    "input": { "name": "ROSI ROSE", "location": "Wohnzimmer", "wateringInterval": 4 }
+  }
+}
+
+### Gießen
+
+POST http://localhost:7200/graphql
+content-type: application/json
+
+{
+  "query": "mutation { waterPlant(id: \"1\") { id lastWatered } }"
+}
+
+### Künstliche Verzögerung (so macht es der Slowdown-Link im Frontend)
+
+POST http://localhost:7200/graphql
+content-type: application/json
+slowdown: 2000
+
+{
+  "query": "{ plants { id } }"
+}

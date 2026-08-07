@@ -1,0 +1,6 @@
+{
+  "ext": "js,json,graphql",
+  "events": {
+    "start": "echo \"\\x1Bc\""
+  }
+}
