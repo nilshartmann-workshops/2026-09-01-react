@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
 import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
+import PlantErrorBoundary from "./PlantErrorBoundary.tsx";
 import PlantForm from "./PlantForm.tsx";
 import PlantList from "./PlantList.tsx";
 import { Panel, Tab, TabBar } from "./TabBar.tsx";
@@ -16,15 +17,18 @@ export default function App() {
         <Tab tabId={"effekte"}>Effekte (Spielwiese)</Tab>
 
         <Panel tabId={"list"}>
-          <Suspense
-            fallback={
-              <div className={"CardListFallback"}>
-                Pflanzen werden geladen...
-              </div>
-            }
-          >
-            <PlantList />
-          </Suspense>
+          {/* 💬 Erzählen: Error Boundary *außen*, Suspense *innen* */}
+          <PlantErrorBoundary>
+            <Suspense
+              fallback={
+                <div className={"CardListFallback"}>
+                  Pflanzen werden geladen...
+                </div>
+              }
+            >
+              <PlantList />
+            </Suspense>
+          </PlantErrorBoundary>
         </Panel>
         <Panel tabId={"form"}>
           <PlantForm />
