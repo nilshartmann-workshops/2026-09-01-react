@@ -1,5 +1,5 @@
 import { Plant } from "../types.ts";
-import PlantCardList from "./PlantCardList.tsx";
+import IntervalSelector from "./IntervalSelector.tsx";
 
 const allPlants: Plant[] = [
   {
@@ -27,20 +27,9 @@ const allPlants: Plant[] = [
 export default function App() {
   return (
     <div className={"AppContainer"}>
-      <PlantCardList plants={allPlants} />
+      <IntervalSelector />
 
-      {/*<PlantCard*/}
-      {/*  name={"Aloe Vera"}*/}
-      {/*  location={"Schlafzimmer"}*/}
-      {/*  wateringInterval={12}*/}
-      {/*  lastWatered={"2026-08-28"}*/}
-      {/*/>*/}
-
-      {/*<PlantCard*/}
-      {/*  name={"Orchidee"}*/}
-      {/*  location={"Wohnzimmer"}*/}
-      {/*  wateringInterval={20}*/}
-      {/*/>*/}
+      {/*<PlantCardList plants={allPlants} />*/}
     </div>
   );
 }
