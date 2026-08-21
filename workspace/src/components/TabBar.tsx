@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useRef, useState } from "react";
 
 /**
  * Eine Tab-Navigation aus drei Bausteinen: `TabBar` (der Rahmen), `Tab`
@@ -50,6 +50,8 @@ export function TabBar({ defaultTabId, children }: TabBarProps) {
   const [activeTabId, setActiveTabId] = useState(defaultTabId);
 
   // 💬 Seit React 19 direkt als Provider; vorher <TabBarContext.Provider>
+  // 💬 Zeigen: useMemo um den Wert legen -> ändert nichts. Es gibt hier nichts
+  //    zu stabilisieren, activeTabId ändert sich ja wirklich.
   return (
     <TabBarContext value={{ activeTabId, onTabChange: setActiveTabId }}>
       <div className={"TabBar"}>{children}</div>
@@ -69,8 +71,17 @@ type TabProps = {
  *
  * Ist dieser Tab gerade aktiv, wird der Button deaktiviert.
  */
+// 💬 Zeigen: Tab in memo() wickeln. Seine Properties sind konstant, der Zähler
+//    läuft trotzdem weiter: memo vergleicht Properties, und ein Context ist
+//    keine.
 export function Tab({ tabId, children }: TabProps) {
   const { activeTabId, onTabChange } = useTabBarContext();
+
+  /* eslint-disable react-hooks/refs -- Render-Zähler, Begründung in Child.tsx */
+  const renderCount = useRef(0);
+  renderCount.current++;
+  const renders = renderCount.current;
+  /* eslint-enable react-hooks/refs */
 
   const isActive = tabId === activeTabId;
 
@@ -80,7 +91,7 @@ export function Tab({ tabId, children }: TabProps) {
       disabled={isActive}
       onClick={() => onTabChange(tabId)}
     >
-      {children}
+      {children} <span className={"RenderCounter"}>{renders}×</span>
     </button>
   );
 }
