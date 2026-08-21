@@ -13,7 +13,7 @@ const locations = [
 ];
 
 // 💬 Annotation, nicht `as`: Die wird *geprüft*, ein Tippfehler im Feldnamen
-//    fällt hier auf.
+//    fällt hier auf. Der Typ kommt jetzt aus dem Schema.
 const defaultValues: PlantFormState = {
   name: "",
   location: "",
@@ -21,12 +21,31 @@ const defaultValues: PlantFormState = {
   lastWatered: undefined,
 };
 
+// 💬 Erzählen: `errors` enthält die zod-Issues, keine Strings. Die Komponente
+//    bekommt die Objekte und entscheidet, was sie davon anzeigt.
+type FormError = { message: string } | undefined;
+
+function ErrorMessage({ errors }: { errors: FormError[] }) {
+  const error = errors[0];
+
+  if (!error) {
+    return null;
+  }
+
+  return <span className={"error-message"}>{error.message}</span>;
+}
+
 export default function PlantForm() {
   const form = useForm({
     defaultValues,
-    // 💬 Erzählen: der Absende-Handler steht hier, nicht am <form>-Element
-    onSubmit: async ({ value }) => {
+    // 💬 Erzählen: kein Adapter nötig, TanStack Form versteht "Standard
+    //    Schema", und zod 4 spricht das
+    validators: {
+      onChange: PlantFormState,
+    },
+    onSubmit: async ({ value, formApi }) => {
       console.log("Formulardaten:", value);
+      formApi.reset();
     },
   });
 
@@ -50,7 +69,11 @@ export default function PlantForm() {
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
+              className={
+                field.state.meta.errors.length > 0 ? "error" : undefined
+              }
             />
+            <ErrorMessage errors={field.state.meta.errors} />
           </div>
         )}
       </form.Field>
@@ -64,6 +87,9 @@ export default function PlantForm() {
               value={field.state.value}
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
+              className={
+                field.state.meta.errors.length > 0 ? "error" : undefined
+              }
             >
               <option value={""}>Standort wählen...</option>
               {locations.map((location) => (
@@ -72,6 +98,7 @@ export default function PlantForm() {
                 </option>
               ))}
             </select>
+            <ErrorMessage errors={field.state.meta.errors} />
           </div>
         )}
       </form.Field>
@@ -81,10 +108,14 @@ export default function PlantForm() {
           weil der IntervalSelector seinen Zustand nicht selbst hält. */}
       <form.Field name={"wateringInterval"}>
         {(field) => (
-          <IntervalSelector
-            interval={field.state.value}
-            onIntervalChange={field.handleChange}
-          />
+          <div className={"FormControl"}>
+            <IntervalSelector
+              interval={field.state.value}
+              onIntervalChange={field.handleChange}
+              error={field.state.meta.errors.length > 0}
+            />
+            <ErrorMessage errors={field.state.meta.errors} />
+          </div>
         )}
       </form.Field>
 
@@ -92,19 +123,36 @@ export default function PlantForm() {
         {(field) => (
           <div className={"FormControl"}>
             <label>Zuletzt gegossen</label>
-            {/* 💬 `?? ""`: undefined darf nicht als value an ein input */}
+            {/* 💬 Ein geleertes Datumsfeld liefert "", und das lehnt
+                z.iso.date().optional() ab */}
             <input
               type={"date"}
               name={field.name}
               value={field.state.value ?? ""}
               onBlur={field.handleBlur}
-              onChange={(e) => field.handleChange(e.target.value)}
+              onChange={(e) =>
+                field.handleChange(
+                  e.target.value === "" ? undefined : e.target.value,
+                )
+              }
+              className={
+                field.state.meta.errors.length > 0 ? "error" : undefined
+              }
             />
+            <ErrorMessage errors={field.state.meta.errors} />
           </div>
         )}
       </form.Field>
 
       <div className={"FormButtons"}>
+        {/* 💬 type="button" nicht vergessen, sonst ist er ein Submit-Button */}
+        <button
+          type={"button"}
+          className={"secondary"}
+          onClick={() => form.reset()}
+        >
+          Eingaben löschen 🧹
+        </button>
         <button type={"submit"} className={"primary"}>
           Pflanze hinzufügen 🌱
         </button>
