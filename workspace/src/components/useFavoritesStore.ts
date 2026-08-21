@@ -21,3 +21,10 @@ export const useFavoritesStore = create<FavoritesStore>()((set) => ({
   toggleFavorite: (id) =>
     set((state) => ({ favoriteIds: toggle(state.favoriteIds, id) })),
 }));
+
+// 💬 Erzählen: Funktion, die eine Funktion zurückgibt. selectIsFavorite("3")
+//    liefert den fertigen Selector für die Pflanze mit der Id 3.
+export const selectIsFavorite =
+  (id: string) =>
+  (state: FavoritesStore): boolean =>
+    state.favoriteIds.includes(id);

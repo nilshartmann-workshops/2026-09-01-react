@@ -1,4 +1,4 @@
-import { useFavoritesStore } from "./useFavoritesStore.ts";
+import { selectIsFavorite, useFavoritesStore } from "./useFavoritesStore.ts";
 
 type PlantCardProps = {
   id: string;
@@ -15,10 +15,9 @@ export default function PlantCard({
   wateringInterval,
   lastWatered,
 }: PlantCardProps) {
-  // 💬 fürs Erste bequem: der komplette Store
-  const { favoriteIds, toggleFavorite } = useFavoritesStore();
-
-  const isFavorite = favoriteIds.includes(id);
+  // 💬 Erzählen: zwei Selektoren statt einem Store-Zugriff
+  const isFavorite = useFavoritesStore(selectIsFavorite(id));
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
 
   const wateringInfo =
     wateringInterval === 1
