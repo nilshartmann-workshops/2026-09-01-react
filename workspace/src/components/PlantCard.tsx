@@ -5,7 +5,8 @@ type PlantCardProps = {
   name: string;
   location: string;
   wateringInterval: number;
-  lastWatered?: string;
+  // 💬 Erzählen: jetzt auch `null`, von Hand hatten wir das übersehen
+  lastWatered?: string | null;
 };
 
 export default function PlantCard({

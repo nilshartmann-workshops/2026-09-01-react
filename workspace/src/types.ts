@@ -1,8 +1,5 @@
-// 💬 Diesen Typ pflegen wir erstmal von Hand. Später generieren wir ihn.
-export type Plant = {
-  id: string;
-  name: string;
-  location: string;
-  wateringInterval: number;
-  lastWatered?: string;
-};
+import { G_GetPlants } from "./_generated-graphql-types.ts";
+
+// 💬 Die Pointe: Der Typ beschreibt nicht "eine Pflanze", sondern das, was
+//    unsere Query anfordert. Zeigen: Feld aus der Query nehmen -> Fehler hier.
+export type Plant = G_GetPlants["plants"][number];

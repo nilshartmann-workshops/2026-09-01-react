@@ -1,10 +1,11 @@
 import { gql } from "@apollo/client";
 import { useSuspenseQuery } from "@apollo/client/react";
 
-import { Plant } from "../types.ts";
+import { GetPlantsDocument } from "../_generated-graphql-types.ts";
 import FavoritePlantList from "./FavoritePlantList.tsx";
 import PlantCardList from "./PlantCardList.tsx";
 
+// 💬 Erzählen: unbenutzt, muss aber bleiben. Der Generator liest den Quelltext.
 const PLANTS_QUERY = gql`
   query GetPlants {
     plants {
@@ -18,7 +19,8 @@ const PLANTS_QUERY = gql`
 `;
 
 export default function PlantList() {
-  const { data } = useSuspenseQuery<{ plants: Plant[] }>(PLANTS_QUERY);
+  // 💬 kein Typparameter mehr: GetPlantsDocument bringt den Ergebnistyp mit
+  const { data } = useSuspenseQuery(GetPlantsDocument);
 
   return (
     <div className={"PlantList"}>
