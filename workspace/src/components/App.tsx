@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
 import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantForm from "./PlantForm.tsx";
 import PlantList from "./PlantList.tsx";
@@ -35,6 +36,13 @@ export default function App() {
         >
           Rendern (Spielwiese)
         </Tab>
+        <Tab
+          tabId={"effekte"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Effekte (Spielwiese)
+        </Tab>
 
         <Panel tabId={"list"} activeTabId={activeTabId}>
           <PlantList />
@@ -44,6 +52,9 @@ export default function App() {
         </Panel>
         <Panel tabId={"render"} activeTabId={activeTabId}>
           <RenderSpielwiese />
+        </Panel>
+        <Panel tabId={"effekte"} activeTabId={activeTabId}>
+          <EffektSpielwiese />
         </Panel>
       </TabBar>
     </div>
