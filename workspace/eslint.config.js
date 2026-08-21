@@ -9,7 +9,7 @@ import importPlugin from "eslint-plugin-import";
 
 // Auf "false" gesetzt, sortiert ESLint die Imports nicht mehr. Beim
 // Live-Coding sind die Meldungen dazu nur lästig.
-const enableImportRules = true;
+const enableImportRules = false;
 
 const importRules = enableImportRules
   ? {
