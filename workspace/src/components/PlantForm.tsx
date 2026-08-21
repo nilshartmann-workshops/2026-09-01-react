@@ -1,45 +1,111 @@
-import { useState } from "react";
+import { useForm } from "@tanstack/react-form";
 
-/**
- * Platzhalter für das Formular, mit dem später Pflanzen angelegt werden. Die
- * Eingaben landen bisher nur auf der Konsole.
- */
+import IntervalSelector from "./IntervalSelector.tsx";
+import { PlantFormState } from "./PlantFormState.types.ts";
+
+const locations = [
+  "Wohnzimmer",
+  "Arbeitszimmer",
+  "Küche",
+  "Schlafzimmer",
+  "Badezimmer",
+  "Flur",
+];
+
+// 💬 Annotation, nicht `as`: Die wird *geprüft*, ein Tippfehler im Feldnamen
+//    fällt hier auf.
+const defaultValues: PlantFormState = {
+  name: "",
+  location: "",
+  wateringInterval: 0,
+  lastWatered: undefined,
+};
+
 export default function PlantForm() {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
-  const [wateringInterval, setWateringInterval] = useState(1);
-
-  const onSaveClick = () => {
-    console.log("Speichern:", { name, location, wateringInterval });
-  };
+  const form = useForm({
+    defaultValues,
+    // 💬 Erzählen: der Absende-Handler steht hier, nicht am <form>-Element
+    onSubmit: async ({ value }) => {
+      console.log("Formulardaten:", value);
+    },
+  });
 
   return (
-    <form>
-      <div className={"FormControl"}>
-        <label>Name der Pflanze</label>
-        <input value={name} onChange={(e) => setName(e.target.value)} />
-      </div>
+    // 💬 Erzählen: handleSubmit ersetzt unser onSubmit nicht, es wird darin
+    //    aufgerufen. preventDefault machen wir selbst.
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        void form.handleSubmit();
+      }}
+    >
+      {/* 💬 Erzählen: zwischen den Tags steht eine Funktion ("Render-Prop"),
+          keine Komponente. Nebeneffekt: Beim Tippen rendert nur dieses Feld. */}
+      <form.Field name={"name"}>
+        {(field) => (
+          <div className={"FormControl"}>
+            <label>Name der Pflanze</label>
+            <input
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+            />
+          </div>
+        )}
+      </form.Field>
 
-      <div className={"FormControl"}>
-        <label>Standort</label>
-        <input value={location} onChange={(e) => setLocation(e.target.value)} />
-      </div>
+      <form.Field name={"location"}>
+        {(field) => (
+          <div className={"FormControl"}>
+            <label>Standort</label>
+            <select
+              name={field.name}
+              value={field.state.value}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+            >
+              <option value={""}>Standort wählen...</option>
+              {locations.map((location) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </form.Field>
 
-      <div className={"FormControl"}>
-        <label>Gießen alle ... Tage</label>
-        <input
-          type={"number"}
-          value={wateringInterval}
-          onChange={(e) => setWateringInterval(Number(e.target.value))}
-        />
-      </div>
+      {/* 💬 Erzählen: dasselbe <form.Field> wie überall, nur mit unserer eigenen
+          Komponente darin. handleChange geht direkt als onIntervalChange durch,
+          weil der IntervalSelector seinen Zustand nicht selbst hält. */}
+      <form.Field name={"wateringInterval"}>
+        {(field) => (
+          <IntervalSelector
+            interval={field.state.value}
+            onIntervalChange={field.handleChange}
+          />
+        )}
+      </form.Field>
+
+      <form.Field name={"lastWatered"}>
+        {(field) => (
+          <div className={"FormControl"}>
+            <label>Zuletzt gegossen</label>
+            {/* 💬 `?? ""`: undefined darf nicht als value an ein input */}
+            <input
+              type={"date"}
+              name={field.name}
+              value={field.state.value ?? ""}
+              onBlur={field.handleBlur}
+              onChange={(e) => field.handleChange(e.target.value)}
+            />
+          </div>
+        )}
+      </form.Field>
 
       <div className={"FormButtons"}>
-        <button
-          type={"button"}
-          className={"primary"}
-          onClick={() => onSaveClick()}
-        >
+        <button type={"submit"} className={"primary"}>
           Pflanze hinzufügen 🌱
         </button>
       </div>
