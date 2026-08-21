@@ -1,4 +1,5 @@
 import { Plant } from "../types.ts";
+import FavoritePlantList from "./FavoritePlantList.tsx";
 import PlantCardList from "./PlantCardList.tsx";
 
 const allPlants: Plant[] = [
@@ -25,5 +26,13 @@ const allPlants: Plant[] = [
 ];
 
 export default function PlantList() {
-  return <PlantCardList plants={allPlants} />;
+  return (
+    <div className={"PlantList"}>
+      <div>
+        <h2>Alle Pflanzen</h2>
+        <PlantCardList plants={allPlants} />
+      </div>
+      <FavoritePlantList plants={allPlants} />
+    </div>
+  );
 }
