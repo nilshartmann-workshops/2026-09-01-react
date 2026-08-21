@@ -1,6 +1,7 @@
 import { revalidateLogic } from "@tanstack/react-form";
 
 import { useAppForm } from "./app-form.tsx";
+import { getDaysUntilWatering } from "./date-utils.ts";
 import { PlantFormState } from "./PlantFormState.types.ts";
 
 const locations = [
@@ -18,6 +19,22 @@ const defaultValues: PlantFormState = {
   wateringInterval: 0,
   lastWatered: undefined,
 };
+
+function NextWateringHint({ days }: { days: number | undefined }) {
+  if (days === undefined) {
+    return null;
+  }
+
+  if (days < 0) {
+    return <p className={"error-message"}>Überfällig seit {-days} Tagen 🥀</p>;
+  }
+
+  if (days === 0) {
+    return <p>Heute gießen 💧</p>;
+  }
+
+  return <p>Nächstes Gießen in {days} Tagen</p>;
+}
 
 export default function PlantForm() {
   // 💬 Erzählen: useAppForm statt useForm, sonst ändert sich am Aufruf nichts
@@ -63,6 +80,21 @@ export default function PlantForm() {
       <form.AppField name={"lastWatered"}>
         {(field) => <field.DateField label={"Zuletzt gegossen"} />}
       </form.AppField>
+
+      {/* 💬 Erzählen: der Selektor gibt eine *Zahl* zurück, keinen Wert, der
+          bei jedem Aufruf neu entsteht. Subscribe vergleicht mit ===. */}
+      <form.Subscribe
+        selector={(state) =>
+          state.values.lastWatered
+            ? getDaysUntilWatering(
+                state.values.lastWatered,
+                state.values.wateringInterval,
+              )
+            : undefined
+        }
+      >
+        {(days) => <NextWateringHint days={days} />}
+      </form.Subscribe>
 
       <div className={"FormButtons"}>
         <button
