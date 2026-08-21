@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantForm from "./PlantForm.tsx";
 import PlantList from "./PlantList.tsx";
 import { Panel, Tab, TabBar } from "./TabBar.tsx";
@@ -27,12 +28,22 @@ export default function App() {
         >
           Neue Pflanze
         </Tab>
+        <Tab
+          tabId={"render"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Rendern (Spielwiese)
+        </Tab>
 
         <Panel tabId={"list"} activeTabId={activeTabId}>
           <PlantList />
         </Panel>
         <Panel tabId={"form"} activeTabId={activeTabId}>
           <PlantForm />
+        </Panel>
+        <Panel tabId={"render"} activeTabId={activeTabId}>
+          <RenderSpielwiese />
         </Panel>
       </TabBar>
     </div>
