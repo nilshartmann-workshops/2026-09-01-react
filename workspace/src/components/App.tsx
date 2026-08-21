@@ -3,29 +3,26 @@ import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantForm from "./PlantForm.tsx";
 import PlantList from "./PlantList.tsx";
 import { Panel, Tab, TabBar } from "./TabBar.tsx";
-import { useTabBar } from "./useTabBar.ts";
 
 export default function App() {
-  const { getTabProps, getPanelProps } = useTabBar("list");
-
   return (
     <div className={"AppContainer"}>
-      <TabBar>
-        <Tab {...getTabProps("list")}>Pflanzen</Tab>
-        <Tab {...getTabProps("form")}>Neue Pflanze</Tab>
-        <Tab {...getTabProps("render")}>Rendern (Spielwiese)</Tab>
-        <Tab {...getTabProps("effekte")}>Effekte (Spielwiese)</Tab>
+      <TabBar defaultTabId={"list"}>
+        <Tab tabId={"list"}>Pflanzen</Tab>
+        <Tab tabId={"form"}>Neue Pflanze</Tab>
+        <Tab tabId={"render"}>Rendern (Spielwiese)</Tab>
+        <Tab tabId={"effekte"}>Effekte (Spielwiese)</Tab>
 
-        <Panel {...getPanelProps("list")}>
+        <Panel tabId={"list"}>
           <PlantList />
         </Panel>
-        <Panel {...getPanelProps("form")}>
+        <Panel tabId={"form"}>
           <PlantForm />
         </Panel>
-        <Panel {...getPanelProps("render")}>
+        <Panel tabId={"render"}>
           <RenderSpielwiese />
         </Panel>
-        <Panel {...getPanelProps("effekte")}>
+        <Panel tabId={"effekte"}>
           <EffektSpielwiese />
         </Panel>
       </TabBar>
