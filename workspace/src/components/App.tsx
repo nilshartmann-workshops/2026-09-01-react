@@ -1,39 +1,40 @@
 import { useState } from "react";
 
-import { Plant } from "../types.ts";
-import IntervalSelector from "./IntervalSelector.tsx";
-
-const allPlants: Plant[] = [
-  {
-    id: "1",
-    name: "Aloe Vera",
-    location: "Schlafzimmer",
-    wateringInterval: 12,
-    lastWatered: "2026-08-28",
-  },
-  {
-    id: "2",
-    name: "Orchidee",
-    location: "Wohnzimmer",
-    wateringInterval: 20,
-  },
-  {
-    id: "3",
-    name: "Kaktus Karl",
-    location: "Arbeitszimmer",
-    wateringInterval: 21,
-    lastWatered: "2026-07-15",
-  },
-];
+import PlantForm from "./PlantForm.tsx";
+import PlantList from "./PlantList.tsx";
+import { Panel, Tab, TabBar } from "./TabBar.tsx";
 
 export default function App() {
-  const [interval, setInterval] = useState<number>();
+  const [activeTabId, setActiveTabId] = useState("list");
+
+  // 💬 Erzählen: activeTabId und onTabChange an jedem Tab und jedem Panel.
+  //    Was passiert, wenn zwischen App und Tab noch eine Ebene dazukommt?
 
   return (
     <div className={"AppContainer"}>
-      <IntervalSelector interval={interval} onIntervalChange={setInterval} />
+      <TabBar>
+        <Tab
+          tabId={"list"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Pflanzen
+        </Tab>
+        <Tab
+          tabId={"form"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Neue Pflanze
+        </Tab>
 
-      {/*<PlantCardList plants={allPlants} />*/}
+        <Panel tabId={"list"} activeTabId={activeTabId}>
+          <PlantList />
+        </Panel>
+        <Panel tabId={"form"} activeTabId={activeTabId}>
+          <PlantForm />
+        </Panel>
+      </TabBar>
     </div>
   );
 }
