@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
 import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantForm from "./PlantForm.tsx";
@@ -14,7 +16,15 @@ export default function App() {
         <Tab tabId={"effekte"}>Effekte (Spielwiese)</Tab>
 
         <Panel tabId={"list"}>
-          <PlantList />
+          <Suspense
+            fallback={
+              <div className={"CardListFallback"}>
+                Pflanzen werden geladen...
+              </div>
+            }
+          >
+            <PlantList />
+          </Suspense>
         </Panel>
         <Panel tabId={"form"}>
           <PlantForm />

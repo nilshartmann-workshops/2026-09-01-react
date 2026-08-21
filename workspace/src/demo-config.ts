@@ -14,6 +14,8 @@
  * In einer echten Anwendung gibt es so etwas natürlich nicht 🙂
  */
 export const delayConfig: Record<string, number> = {
-  GetPlants: 0,
+  // 💬 Zeigen: man kann die Suspense-Boundary auch über die React Dev Tools
+  //    auslösen
+  GetPlants: 2000,
   CreatePlant: 0,
 };
