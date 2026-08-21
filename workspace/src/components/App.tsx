@@ -1,3 +1,5 @@
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import { Suspense } from "react";
 
 import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
@@ -40,6 +42,10 @@ export default function App() {
           <EffektSpielwiese />
         </Panel>
       </TabBar>
+
+      {/* 💬 Zeigen: unten rechts das Logo aufklappen. Das Formular meldet sich
+          dort von selbst an, sobald sein Tab offen ist. */}
+      <TanStackDevtools plugins={[formDevtoolsPlugin()]} />
     </div>
   );
 }

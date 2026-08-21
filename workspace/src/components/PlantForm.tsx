@@ -1,4 +1,4 @@
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 
 import IntervalSelector from "./IntervalSelector.tsx";
 import { PlantFormState } from "./PlantFormState.types.ts";
@@ -38,10 +38,13 @@ function ErrorMessage({ errors }: { errors: FormError[] }) {
 export default function PlantForm() {
   const form = useForm({
     defaultValues,
+    // 💬 Fallstrick: revalidateLogic schaut nur unter onDynamic nach. Was
+    //    unter onChange stehen bleibt, läuft weiter wie vorher.
+    validationLogic: revalidateLogic(),
     // 💬 Erzählen: kein Adapter nötig, TanStack Form versteht "Standard
     //    Schema", und zod 4 spricht das
     validators: {
-      onChange: PlantFormState,
+      onDynamic: PlantFormState,
     },
     onSubmit: async ({ value, formApi }) => {
       console.log("Formulardaten:", value);
