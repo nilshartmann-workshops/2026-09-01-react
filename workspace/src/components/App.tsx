@@ -1,6 +1,7 @@
 import PlantCard from "./PlantCard.tsx";
 import { Plant } from "../types.ts";
 import PlantCardList from "./PlantCardList.tsx";
+import IntervalSelector from "./IntervalSelector.tsx";
 
 export default function App() {
 
@@ -30,6 +31,7 @@ export default function App() {
 
   return (
     <div className={"AppContainer"}>
+      <IntervalSelector />
       <PlantCardList plants={allPlants} />
       {/*<PlantCard plant={*/}
       {/*  {id: "1", name: "Rose (Schatten)", location: "Küche", lastWatered: "2026-08-31", wateringInterval: 5}*/}
