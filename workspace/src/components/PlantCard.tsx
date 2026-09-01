@@ -5,6 +5,8 @@
 
 // record PlantCardProps(String name, String location, String lastWatered, int wateringInterval) {}
 
+import { Plant } from "../types.ts";
+
 type PlantCardProps = {
   name: string;
   location: string;
@@ -41,6 +43,10 @@ export default function PlantCard( { name, location, lastWatered, wateringInterv
 
 
   // return React.createElement("div", React.createElement("h1", "Hello World"))
+
+  // if (!lastWatered) {
+  //   return null;
+  // }
 
   return (
     <div className={"PlantCard"}>
