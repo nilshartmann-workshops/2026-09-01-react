@@ -30,13 +30,25 @@ export default function App() {
     },
   ];
   const [visible, setVisible] = useState(true)
-  const [interval, setInterval] = useState(123);
+  const [interval, setInterval] = useState<number|undefined>();
+
+
+  
+  // var s = ""; // Java!
+  // s = null;  // Java!
+
+  // Type inference TypeScript
+  let s: string|null  = "";
+  s = "...";
+  s = null;
+
+
 
   return (
     <div className={"AppContainer"}>
       <button onClick={() => setVisible(!visible)}>Zeigen/Verstecken</button>
 
-      {visible && <IntervalSelector interval={interval} setInterval={setInterval}/>  }
+      {visible && <IntervalSelector interval={interval} onIntervalChange={setInterval}/>  }
 
       <p>Interval in App {interval}</p>
 

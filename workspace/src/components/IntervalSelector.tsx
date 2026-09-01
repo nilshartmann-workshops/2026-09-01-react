@@ -20,9 +20,9 @@ import { useState } from "react";
 // let zahl = 7;
 type IntervalSelectorProps = {
   interval: number
-  setInterval: (newInterval: number) => void
+  onIntervalChange: (newInterval: number) => void
 }
-export default function IntervalSelector({interval, setInterval}: IntervalSelectorProps) {
+export default function IntervalSelector({interval, onIntervalChange}: IntervalSelectorProps) {
   // Kontrollierte                     (vs unkontrolliertes)
 
   // Zustand State  (Model)
@@ -45,7 +45,7 @@ export default function IntervalSelector({interval, setInterval}: IntervalSelect
         value={interval}
         onChange={(event) => {
           console.log("1");
-          setInterval(parseInt(event.target.value));
+          onIntervalChange(parseInt(event.target.value));
           console.log("2");
         }}
       />
@@ -53,7 +53,7 @@ export default function IntervalSelector({interval, setInterval}: IntervalSelect
         type={"button"}
         className={"primary"}
         onClick={() => {
-          setInterval(interval + 1);
+          onIntervalChange(interval + 1);
         }}
       >
         {" "}
