@@ -1,62 +1,50 @@
-import PlantCard from "./PlantCard.tsx";
-import { Plant } from "../types.ts";
-import PlantCardList from "./PlantCardList.tsx";
-import IntervalSelector from "./IntervalSelector.tsx";
 import { useState } from "react";
+import { Panel, Tab, TabBar } from "./TabBar.tsx";
+import PlantCardList from "./PlantCardList.tsx";
+import PlantForm from "./PlantForm.tsx";
+import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 
 export default function App() {
-
-//  const allPlants: Array<Plant> = [
-  const allPlants: Plant[] = [
-    {
-      id: "1",
-      name: "Aloe Vera",
-      location: "Schlafzimmer",
-      wateringInterval: 12,
-      lastWatered: "2026-08-28",
-    },
-    {
-      id: "2",
-      name: "Orchidee",
-      location: "Wohnzimmer",
-      wateringInterval: 20,
-    },
-    {
-      id: "3",
-      name: "Kaktus Karl",
-      location: "Arbeitszimmer",
-      wateringInterval: 21,
-      lastWatered: "2026-07-15",
-    },
-  ];
-  const [visible, setVisible] = useState(true)
-  const [interval, setInterval] = useState<number|undefined>();
-
-
-  
-  // var s = ""; // Java!
-  // s = null;  // Java!
-
-  // Type inference TypeScript
-  let s: string|null  = "";
-  s = "...";
-  s = null;
-
+  const [activeTabId, setActiveTabId] = useState("list");
 
 
   return (
     <div className={"AppContainer"}>
-      <button onClick={() => setVisible(!visible)}>Zeigen/Verstecken</button>
+      <TabBar>
+        <Tab
+          tabId={"list"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Pflanzen
+        </Tab>
+        <Tab
+          tabId={"form"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Neue Pflanze
+        </Tab>
 
-      {visible && <IntervalSelector interval={interval} onIntervalChange={setInterval}/>  }
+        <Tab
+          tabId={"render"}
+          activeTabId={activeTabId}
+          onTabChange={setActiveTabId}
+        >
+          Render Spielwiese
+        </Tab>
 
-      <p>Interval in App {interval}</p>
 
-      <PlantCardList plants={allPlants} />
-      {/*<PlantCard plant={*/}
-      {/*  {id: "1", name: "Rose (Schatten)", location: "Küche", lastWatered: "2026-08-31", wateringInterval: 5}*/}
-      {/*} />*/}
-      {/*<PlantCard name={"Rose (Sonne)"} location={"Küche"} wateringInterval={1} />*/}
+        <Panel tabId={"list"} activeTabId={activeTabId}>
+...
+        </Panel>
+        <Panel tabId={"form"} activeTabId={activeTabId}>
+          <PlantForm />
+        </Panel>
+        <Panel tabId={"render"} activeTabId={activeTabId}>
+          <RenderSpielwiese />
+        </Panel>
+      </TabBar>
     </div>
   );
 }

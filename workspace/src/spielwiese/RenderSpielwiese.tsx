@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 
-import Child from "./Child.tsx";
+import {Child} from "./Child.tsx";
 import MemoChild from "./MemoChild.tsx";
 
 /**
@@ -18,21 +18,31 @@ import MemoChild from "./MemoChild.tsx";
  * ⚠️ Diese Datei ist fertig, du musst hier nichts implementieren. Wir schauen
  *    sie uns später gemeinsam an.
  */
-export default function RenderSpielwiese() {
+
+type RenderSpielwieseProps = {
+  allTags?: string[]
+}
+export default function RenderSpielwiese(props: RenderSpielwieseProps) {
   const [counter, setCounter] = useState(0);
-  const [text, setText] = useState("");
+  const [text, setText] = useState("Abc");
 
-  // Ohne useCallback entstünde hier bei *jedem* Render eine neue Funktion. Sie
-  // täte dasselbe, wäre aber eine andere Referenz, und damit wäre das memo()
-  // im MemoChild wirkungslos. Zum Ausprobieren: die Zeile darunter
-  // einkommentieren und die useCallback-Variante auskommentieren.
-  const handleReset = useCallback(() => setCounter(0), []);
-  // const handleReset = () => setCounter(0);
+  const a = 42;
 
-  // Dasselbe für ein Array: Ein Array-Literal ist bei jedem Render ein neues
-  // Objekt, auch wenn derselbe Inhalt drinsteht.
-  const tags = useMemo(() => ["Zimmerpflanze", "pflegeleicht"], []);
-  // const tags = ["Zimmerpflanze", "pflegeleicht"];
+  const tags = props.allTags !== undefined ? props.allTags : []
+  // function handleCounterClick() {
+  //   setCounter(0)
+  // }
+
+
+  const handleCounterClick = useCallback(
+    function handleCounterClick() {
+      setCounter(0)
+      console.log(text);
+    },
+    [text]
+  )
+
+
 
   return (
     <div className={"space-y-4"}>
@@ -46,18 +56,8 @@ export default function RenderSpielwiese() {
       </div>
 
       <div className={"flex gap-x-4"}>
-        {/* Kind A bekommt bei jedem Klick auf den Zähler einen neuen Wert... */}
-        <Child name={"Kind A"} value={counter} />
-        {/* ...Kind B dagegen immer denselben. Was heißt das fürs Rendern? */}
-        <Child name={"Kind B"} value={42} />
-        {/* ...und das Memo-Kind ist in memo() eingepackt: Seine Properties
-            ändern sich nie, also rendert es auch nicht mit. */}
-        <MemoChild
-          name={"Memo-Kind"}
-          value={42}
-          onReset={handleReset}
-          tags={tags}
-        />
+        <Child tags={tags} name={"Kind A"} value={counter} onCounterClick={handleCounterClick}/>
+        <Child tags={tags} name={"Kind B"} value={a} onCounterClick={handleCounterClick}/>
       </div>
     </div>
   );

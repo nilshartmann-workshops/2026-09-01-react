@@ -7,29 +7,16 @@
  * jeden einzelnen Render sehen. Deshalb die Ausnahme, und deshalb nur für
  * diese eine Datei.
  */
-import { useRef } from "react";
+import { memo, useRef } from "react";
 
 type ChildProps = {
-  /** Unterscheidet dieses Kind in der Anzeige und auf der Konsole */
   name: string;
-  /** Wird angezeigt, mehr passiert damit nicht */
   value: number;
+  tags: string[]
+  onCounterClick: () => void
 };
 
-/**
- * Zeigt einen Wert an und zählt mit, wie oft es gerendert wurde. Mehr macht
- * dieses Kind nicht; es geht nur darum, das Rendern sichtbar zu machen.
- *
- * ⚠️ Diese Datei ist fertig, du musst hier nichts implementieren. Wir schauen
- *    sie uns später gemeinsam an.
- */
-export default function Child({ name, value }: ChildProps) {
-  // Der Render-Zähler. `useRef` ist eine Kiste, die das Rendern überlebt:
-  // Was du hineinlegst, ist beim nächsten Render noch da. Anders als bei
-  // `useState` löst das Ändern von `renderCount.current` aber *kein* neues
-  // Rendern aus, und genau deshalb nehmen wir hier ein Ref. Mit `useState`
-  // hättest du an dieser Stelle eine Endlosschleife gebaut: rendern, State
-  // setzen, wieder rendern, ...
+const Child = memo(function Child({ name, value, onCounterClick, tags }: ChildProps) {
   const renderCount = useRef(0);
   renderCount.current++;
 
@@ -38,8 +25,12 @@ export default function Child({ name, value }: ChildProps) {
   return (
     <div className={"space-y-2 rounded-lg bg-white p-4 shadow-md"}>
       <h3 className={"font-semibold"}>{name}</h3>
+      <div>Tags: {tags.length}</div>
       <div className={"text-sm text-gray-600"}>value: {value}</div>
       <div className={"RenderCounter"}>{renderCount.current}× gerendert</div>
+      <button className={"primary"} onClick={() => onCounterClick()}>Reset!</button>
     </div>
   );
-}
+})
+
+export {Child}
