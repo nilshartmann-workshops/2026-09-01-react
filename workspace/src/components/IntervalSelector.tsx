@@ -1,8 +1,28 @@
 import { useState } from "react";
 
-// let zahl = 7;
 
-export default function IntervalSelector() {
+// Java
+// @FunctionalInterface
+// interface IntervalChangeListener {
+//   void onIntervalChange(int newInterval)
+// }
+
+// class IntervalSelector {
+//   render(IntervalChangeListener listener) {
+//      listener.onIntervalChange(123);
+//   }
+// }
+
+// IntervalSelector s = s.IntervalSelector();
+// s.render(newInterval -> { /* ... */ })
+
+
+// let zahl = 7;
+type IntervalSelectorProps = {
+  interval: number
+  setInterval: (newInterval: number) => void
+}
+export default function IntervalSelector({interval, setInterval}: IntervalSelectorProps) {
   // Kontrollierte                     (vs unkontrolliertes)
 
   // Zustand State  (Model)
@@ -13,7 +33,7 @@ export default function IntervalSelector() {
   // const interval = state[0];   // 123
   // const setInterval = state[1];
 
-  const [interval, setInterval] = useState(123); // Array Destrukturierung
+  // const [interval, setInterval] = useState(123); // Array Destrukturierung
 
   // const msg = `Sie müssen die Pflanze alle ${interval} Tage gießen`
 

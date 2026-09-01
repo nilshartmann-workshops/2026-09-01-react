@@ -2,6 +2,7 @@ import PlantCard from "./PlantCard.tsx";
 import { Plant } from "../types.ts";
 import PlantCardList from "./PlantCardList.tsx";
 import IntervalSelector from "./IntervalSelector.tsx";
+import { useState } from "react";
 
 export default function App() {
 
@@ -28,10 +29,17 @@ export default function App() {
       lastWatered: "2026-07-15",
     },
   ];
+  const [visible, setVisible] = useState(true)
+  const [interval, setInterval] = useState(123);
 
   return (
     <div className={"AppContainer"}>
-      <IntervalSelector />
+      <button onClick={() => setVisible(!visible)}>Zeigen/Verstecken</button>
+
+      {visible && <IntervalSelector interval={interval} setInterval={setInterval}/>  }
+
+      <p>Interval in App {interval}</p>
+
       <PlantCardList plants={allPlants} />
       {/*<PlantCard plant={*/}
       {/*  {id: "1", name: "Rose (Schatten)", location: "Küche", lastWatered: "2026-08-31", wateringInterval: 5}*/}
