@@ -10,53 +10,45 @@ import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
 // 1. Render Phase  => virtueller DOM  KEINE Seiteneffekte
 // 2. Commit Phase => DOM aktualisiert Seiteneffekte ERLAUBT
 export default function App() {
-  const [activeTabId, setActiveTabId] = useState("list");
+
 
   // window.document.title = "Plantify";
   // setTimeout( ()=> { /* ... */}, 1000);
 
   return (
     <div className={"AppContainer"}>
-      <TabBar>
+      <TabBar initialTabId={"list"}>
         <Tab
           tabId={"list"}
-          activeTabId={activeTabId}
-          onTabChange={setActiveTabId}
         >
           Pflanzen
         </Tab>
         <Tab
           tabId={"form"}
-          activeTabId={activeTabId}
-          onTabChange={setActiveTabId}
         >
           Neue Pflanze
         </Tab>
         <Tab
           tabId={"render"}
-          activeTabId={activeTabId}
-          onTabChange={setActiveTabId}
         >
           Render
         </Tab>
 
         <Tab
           tabId={"effekte"}
-          activeTabId={activeTabId}
-          onTabChange={setActiveTabId}
         >
           Effekte
         </Tab>
-        <Panel tabId={"list"} activeTabId={activeTabId}>
+        <Panel tabId={"list"} >
           <PlantList />
         </Panel>
-        <Panel tabId={"form"} activeTabId={activeTabId}>
+        <Panel tabId={"form"} >
           <PlantForm />
         </Panel>
-        <Panel tabId={"render"} activeTabId={activeTabId}>
+        <Panel tabId={"render"} >
           <RenderSpielwiese />
         </Panel>
-        <Panel tabId={"effekte"} activeTabId={activeTabId}>
+        <Panel tabId={"effekte"} >
           <EffektSpielwiese />
         </Panel>
       </TabBar>

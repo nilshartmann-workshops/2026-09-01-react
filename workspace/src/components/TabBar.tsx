@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 
 /**
  * Eine Tab-Navigation aus drei Bausteinen: `TabBar` (der Rahmen), `Tab`
@@ -20,7 +20,16 @@ import { ReactNode } from "react";
  * ⚠️ Diese Datei ist fertig implementiert, du musst hier (noch) nichts machen.
  */
 
+type ITabBarContext = {
+  activeTabId: string;
+  onTabChange: (newTabId: string) => void;
+}
+
+const TabBarContext = createContext<ITabBarContext|null>(null);
+
+
 type TabBarProps = {
+  initialTabId: string;
   children: ReactNode;
 };
 
@@ -28,34 +37,54 @@ type TabBarProps = {
  * Äußerer Rahmen der Tab-Navigation. Rendert alle Kinder,
  * also die `Tab`- und `Panel`-Elemente.
  */
-export function TabBar({ children }: TabBarProps) {
-  return <div className={"TabBar"}>{children}</div>;
+export function TabBar({ initialTabId, children }: TabBarProps) {
+
+  const [activeTabId, setActiveTabId] = useState(initialTabId);
+
+  const contextValue: ITabBarContext = {
+    activeTabId: activeTabId,
+    onTabChange: setActiveTabId
+  }
+
+  return <div className={"TabBar"}>
+    <TabBarContext value={contextValue}>
+      {children}
+    </TabBarContext>
+  </div>;
 }
 
 type TabProps = {
   /** Benennt diesen Tab, z.B. "list" */
   tabId: string;
-  /** Nennt den Tab, der gerade aktiv ist */
-  activeTabId: string;
-  /** Wird aufgerufen, wenn dieser Tab angeklickt wird */
-  onTabChange: (newTabId: string) => void;
   /** Die Beschriftung des Tab-Buttons */
   children: ReactNode;
 };
+
+function useTabBarContext() {
+  const ctx = useContext(TabBarContext);
+
+  if (ctx === null) {
+    throw new Error("Missing Context")
+  }
+
+  return ctx;
+}
 
 /**
  * Ein einzelner Tab-Button in der Navigationsleiste.
  *
  * Ist dieser Tab gerade aktiv, wird der Button deaktiviert.
  */
-export function Tab({ tabId, activeTabId, onTabChange, children }: TabProps) {
-  const isActive = tabId === activeTabId;
+export function Tab({ tabId, children }: TabProps) {
+  const ctx = useTabBarContext();
+
+  const isActive = tabId === ctx.activeTabId;
 
   return (
     <button
       className={"Tab"}
       disabled={isActive}
-      onClick={() => onTabChange(tabId)}
+      onClick={() => ctx.onTabChange(tabId)}
     >
       {children}
     </button>
@@ -65,9 +94,6 @@ export function Tab({ tabId, activeTabId, onTabChange, children }: TabProps) {
 type PanelProps = {
   /** Nennt den Tab, zu dem dieses Panel gehört */
   tabId: string;
-  /** Nennt den Tab, der gerade aktiv ist */
-  activeTabId: string;
-  /** Wird angezeigt, solange der Tab aktiv ist */
   children: ReactNode;
 };
 
@@ -77,8 +103,11 @@ type PanelProps = {
  * Wenn die tabId nicht der activeTabId entspricht, wird nichts gerendert
  * (nur der aktive Tab soll dargestellt werden).
  */
-export function Panel({ tabId, activeTabId, children }: PanelProps) {
-  if (tabId !== activeTabId) {
+export function Panel({ tabId, children }: PanelProps) {
+
+  const ctx = useTabBarContext();
+
+  if (tabId !== ctx.activeTabId) {
     return null;
   }
 
