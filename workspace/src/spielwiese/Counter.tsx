@@ -1,19 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-/**
- * Zwei Zähler, aber nur einer davon wird gleich einen Effekt interessieren.
- *
- * ⚠️ Das Gerüst ist fertig: zwei States, zwei Buttons, die Anzeige. Was noch
- *    fehlt, ist der `useEffect`. Den baust du später selbst (siehe das `todo`
- *    unten); bis dahin macht diese Komponente nichts weiter als zählen.
- */
+// 1. Render Phase  => virtueller DOM  KEINE Seiteneffekte
+// 2. Commit Phase => DOM aktualisiert Seiteneffekte ERLAUBT
 export default function Counter() {
   const [appleCount, setAppleCount] = useState(0);
   const [orangeCount, setOrangeCount] = useState(0);
 
-  // todo: Hier kommt später der Effekt hin, der den Titel des Browser-Tabs
-  //       auf den aktuellen appleCount setzt, samt Dependency-Array und
-  //       Aufräum-Funktion.
+  useEffect(
+    // Effekt-Callback-Funktion
+    () => {
+      const oldWindowTitle = window.document.title;
+
+      console.log("Effekt wird ausgeführt!", new Date().toLocaleTimeString());
+
+      window.document.title = `${appleCount} Äpfel`
+
+      return () => {
+        // Cleanup-Funktion
+        window.document.title = oldWindowTitle;
+      }
+    },
+    // Dependency-Array
+    [appleCount]
+  )
 
   return (
     <div

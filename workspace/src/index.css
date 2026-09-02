@@ -57,7 +57,7 @@
 }
 
 .TabBar {
-  @apply mb-6 border-b border-gray-200;
+  @apply mt-6  border-t-red-700 border-t-4;
 }
 
 .Tab {

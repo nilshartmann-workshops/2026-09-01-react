@@ -21,7 +21,6 @@ import { ReactNode } from "react";
  */
 
 type TabBarProps = {
-  /** Enthält die Tabs und Panels dieser TabBar */
   children: ReactNode;
 };
 

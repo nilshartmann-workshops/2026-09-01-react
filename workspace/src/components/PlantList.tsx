@@ -25,5 +25,8 @@ const allPlants: Plant[] = [
 ];
 
 export default function PlantList() {
+
+  // loadPlantsFromServer()
+
   return <PlantCardList plants={allPlants} />;
 }
