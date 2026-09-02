@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { Activity, createContext, ReactNode, useContext, useState } from "react";
 
 /**
  * Eine Tab-Navigation aus drei Bausteinen: `TabBar` (der Rahmen), `Tab`
@@ -107,9 +107,7 @@ export function Panel({ tabId, children }: PanelProps) {
 
   const ctx = useTabBarContext();
 
-  if (tabId !== ctx.activeTabId) {
-    return null;
-  }
-
-  return <div className={"TabPanel"}>{children}</div>;
+  return <Activity mode={tabId !== ctx.activeTabId ? "hidden" : "visible"}>
+    <div className={"TabPanel"}>{children}</div>
+  </Activity>
 }

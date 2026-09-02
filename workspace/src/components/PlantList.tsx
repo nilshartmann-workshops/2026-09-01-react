@@ -1,5 +1,7 @@
+import { gql } from "@apollo/client";
 import { Plant } from "../types.ts";
 import PlantCardList from "./PlantCardList.tsx";
+import { useQuery, useSuspenseQuery } from "@apollo/client/react";
 
 const allPlants: Plant[] = [
   {
@@ -24,7 +26,23 @@ const allPlants: Plant[] = [
   },
 ];
 
+const PLANT_QUERY = gql`
+  query GetPlants {
+    plants {
+      id
+      name
+      location
+      wateringInterval
+      lastWatered
+    }
+  }
+`;
+
 export default function PlantList() {
+
+  const result = useSuspenseQuery<{plants: Plant[]}>(PLANT_QUERY);
+
+  const allPlants = result.data.plants;
 
   // loadPlantsFromServer()
 

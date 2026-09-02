@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Panel, Tab, TabBar } from "./TabBar.tsx";
 import PlantCardList from "./PlantCardList.tsx";
 import PlantForm from "./PlantForm.tsx";
@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <div className={"AppContainer"}>
-      <TabBar initialTabId={"list"}>
+      <TabBar initialTabId={"form"}>
         <Tab
           tabId={"list"}
         >
@@ -40,7 +40,11 @@ export default function App() {
           Effekte
         </Tab>
         <Panel tabId={"list"} >
-          <PlantList />
+          <Suspense fallback={<div className={"CardListFallback"}>
+            Pflanzen werden geladen...
+          </div>}>
+            <PlantList />
+          </Suspense>
         </Panel>
         <Panel tabId={"form"} >
           <PlantForm />
