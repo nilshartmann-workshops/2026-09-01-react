@@ -3,10 +3,10 @@ import { Panel, Tab, TabBar } from "./TabBar.tsx";
 import PlantCardList from "./PlantCardList.tsx";
 import PlantForm from "./PlantForm.tsx";
 import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
+import PlantList from "./PlantList.tsx";
 
 export default function App() {
   const [activeTabId, setActiveTabId] = useState("list");
-
 
   return (
     <div className={"AppContainer"}>
@@ -34,9 +34,8 @@ export default function App() {
           Render Spielwiese
         </Tab>
 
-
         <Panel tabId={"list"} activeTabId={activeTabId}>
-...
+          <PlantList />
         </Panel>
         <Panel tabId={"form"} activeTabId={activeTabId}>
           <PlantForm />
