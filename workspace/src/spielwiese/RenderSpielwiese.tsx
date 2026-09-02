@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import {Child} from "./Child.tsx";
 import MemoChild from "./MemoChild.tsx";
+import { produce } from "immer";
 
 /**
  * Spielwiese zum Rendern
@@ -22,9 +23,63 @@ import MemoChild from "./MemoChild.tsx";
 type RenderSpielwieseProps = {
   allTags?: string[]
 }
+
+type Person = {
+  firstname: string;
+  lastname: string;
+}
+
+// // Team A
+// function createPerson(): Person {
+//   return {
+//     firstname: "Klaus",
+//     lastname: "Müller"
+//   }
+// }
+//
+// // Team B
+// const p: Person = createPerson();
+
 export default function RenderSpielwiese(props: RenderSpielwieseProps) {
   const [counter, setCounter] = useState(0);
   const [text, setText] = useState("Abc");
+  const [person, setPerson] = useState<Person>({
+        firstname: "Klaus",
+    lastname: "Müller"
+  })
+
+  function onFirstnameChange(newFirstname: string) {
+    // GEHT NICHT, VERBOTEN!
+    // person.firstname = newFirstname;
+    // setPerson(person);
+
+    // Variante 1: "Manuelles" neuanlegen
+    // setPerson({
+    //   firstname: newFirstname,
+    //   lastname: person.lastname
+    // })
+
+    // Variante 2: Spread-Operator ...
+    setPerson({
+      ...person,
+      firstname: newFirstname
+    })
+
+    // Variante 3: immer-Bibliothek
+    // const newPerson = produce(person, draftPerson => {
+    //   draftPerson.firstname = newFirstname;
+    //   draftPerson.city.plz = "97079"
+    // });
+    // setPerson(newPerson);
+
+
+
+
+
+  }
+
+
+
 
   const a = 42;
 
