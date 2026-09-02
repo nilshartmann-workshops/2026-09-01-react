@@ -43,59 +43,21 @@ type Person = {
 export default function RenderSpielwiese(props: RenderSpielwieseProps) {
   const [counter, setCounter] = useState(0);
   const [text, setText] = useState("Abc");
-  const [person, setPerson] = useState<Person>({
-        firstname: "Klaus",
-    lastname: "Müller"
-  })
-
-  function onFirstnameChange(newFirstname: string) {
-    // GEHT NICHT, VERBOTEN!
-    // person.firstname = newFirstname;
-    // setPerson(person);
-
-    // Variante 1: "Manuelles" neuanlegen
-    // setPerson({
-    //   firstname: newFirstname,
-    //   lastname: person.lastname
-    // })
-
-    // Variante 2: Spread-Operator ...
-    setPerson({
-      ...person,
-      firstname: newFirstname
-    })
-
-    // Variante 3: immer-Bibliothek
-    // const newPerson = produce(person, draftPerson => {
-    //   draftPerson.firstname = newFirstname;
-    //   draftPerson.city.plz = "97079"
-    // });
-    // setPerson(newPerson);
-
-
-
-
-
-  }
-
-
 
 
   const a = 42;
 
-  const tags = props.allTags !== undefined ? props.allTags : []
+  const tags = props.allTags !== undefined ? props.allTags : [];
   // function handleCounterClick() {
   //   setCounter(0)
   // }
 
 
-  const handleCounterClick = useCallback(
     function handleCounterClick() {
       setCounter(0)
       console.log(text);
-    },
-    [text]
-  )
+    }
+
 
 
 

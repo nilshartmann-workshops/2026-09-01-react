@@ -16,7 +16,7 @@ type ChildProps = {
   onCounterClick: () => void
 };
 
-const Child = memo(function Child({ name, value, onCounterClick, tags }: ChildProps) {
+function Child({ name, value, onCounterClick, tags }: ChildProps) {
   const renderCount = useRef(0);
   renderCount.current++;
 
@@ -31,6 +31,6 @@ const Child = memo(function Child({ name, value, onCounterClick, tags }: ChildPr
       <button className={"primary"} onClick={() => onCounterClick()}>Reset!</button>
     </div>
   );
-})
+}
 
 export {Child}
