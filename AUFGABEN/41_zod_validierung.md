@@ -57,29 +57,7 @@
    field.state.meta.errors;
    ```
 
-   Das sind die **zod-Issues** für dieses Feld, also Objekte, keine Strings. Ein Issue hat unter anderem ein `message`, dazu einen `code` und einen `path`. Wir zeigen nur die Meldung an, aber die Komponente bekommt das ganze Objekt, damit sie später auch mehr daraus machen kann.
-
-   Bau dir dafür eine kleine Hilfskomponente in derselben Datei, aber
-   **außerhalb** von `PlantForm`:
-
-   ```tsx
-   type FormError = { message: string } | undefined;
-
-   function ErrorMessage({ errors }: { errors: FormError[] }) {
-     const error = errors[0];
-
-     if (!error) {
-       return null;
-     }
-
-     return <span className={"error-message"}>{error.message}</span>;
-   }
-   ```
-
-   - Aufgerufen wird sie an jedem Feld als
-     `<ErrorMessage errors={field.state.meta.errors} />`.
-
-
+   Das sind die **zod-Issues** für dieses Feld, also Objekte, keine Strings. Ein Issue hat unter anderem ein `message`, und einen `path`. Zeig die `message` des ersten Fehlers (falls vorhanden) und dem zugehörigen Feld an. Achtung: `errors` kann `undefined` sein.
 4. Probier es aus: Submitte ein **leeres** Formular.
    - Es erscheinen sofort alle Fehlermeldungen. Das liegt daran, dass
    die Validierung auch vor dem Submit ausgeführt wird (nicht nur bei `onChange`)
@@ -96,15 +74,11 @@
      ```
 
 6. Zurücksetzen des Formulars dazu:
-   - Nach einem erfolgreichen Absenden soll das Formular wieder leer sein. Das
-     `onSubmit` bekommt dafür als zweites Feld `formApi` herein:
-     `onSubmit: async ({ value, formApi }) => { …; formApi.reset(); }`
-   - Und ein zweiter Button ins `<div className="FormButtons">`, vor den
-     Absende-Button: "Eingaben löschen 🧹", CSS-Klasse `secondary`, ruft
-     `form.reset()` auf.
+   - Ein zweiter Button ins `<div className="FormButtons">`, vor den
+     Absende-Button: "Eingaben zurücksetzen 🧹", muss bei `onClick` 
+     `form.reset()` auf rufen.
 9. Prüf zum Schluss: Füll das Formular korrekt aus und schick es ab. In der
-   Konsole steht das Objekt, alle Fehlermeldungen sind weg, und das Formular ist
-   nach dem Absenden wieder leer.
+   Konsole muss dann das Objekt mit den Formularinhalten stehen.
 
 ## Material
 
