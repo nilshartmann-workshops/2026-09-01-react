@@ -14,6 +14,6 @@
  * In einer echten Anwendung gibt es so etwas natürlich nicht 🙂
  */
 export const delayConfig: Record<string, number> = {
-  GetPlants: 0,
+  GetPlants: 2400,
   CreatePlant: 0,
 };

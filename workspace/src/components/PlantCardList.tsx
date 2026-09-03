@@ -1,5 +1,6 @@
 import { Plant } from "../types.ts";
 import PlantCard from "./PlantCard.tsx";
+import { G_GetPlants } from "../_generated-graphql-types.ts";
 
 type PlantCardListProps = {
   plants: Plant[]

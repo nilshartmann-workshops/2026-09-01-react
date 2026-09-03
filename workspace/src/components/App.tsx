@@ -1,4 +1,4 @@
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Panel, Tab, TabBar } from "./TabBar.tsx";
 import PlantCardList from "./PlantCardList.tsx";
 import PlantForm from "./PlantForm.tsx";
@@ -6,12 +6,20 @@ import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantList from "./PlantList.tsx";
 import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
 import FormExample from "./FormExample.tsx";
+import { useApolloClient } from "@apollo/client/react";
+import { GetPlantsDocument } from "../_generated-graphql-types.ts";
 
 
 // 1. Render Phase  => virtueller DOM  KEINE Seiteneffekte
 // 2. Commit Phase => DOM aktualisiert Seiteneffekte ERLAUBT
 export default function App() {
 
+  const c = useApolloClient()
+
+  useEffect(() => {
+    c.readQuery({query: GetPlantsDocument})
+    console.log("Vorgeladen")
+  }, [c]);
 
   // window.document.title = "Plantify";
   // setTimeout( ()=> { /* ... */}, 1000);
@@ -48,7 +56,7 @@ export default function App() {
           </Suspense>
         </Panel>
         <Panel tabId={"form"} >
-          <FormExample />
+          <PlantForm />
         </Panel>
         <Panel tabId={"render"} >
           <RenderSpielwiese />

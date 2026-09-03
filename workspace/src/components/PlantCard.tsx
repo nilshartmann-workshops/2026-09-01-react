@@ -10,7 +10,7 @@ import { Plant } from "../types.ts";
 type PlantCardProps = {
   name: string;
   location: string;
-  lastWatered?: string;
+  lastWatered?: string|null;
   wateringInterval: number;
 }
 

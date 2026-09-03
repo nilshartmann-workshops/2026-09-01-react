@@ -1,7 +1,3 @@
-export type Plant = {
-  id: string;
-  name: string;
-  location: string;
-  lastWatered?: string;
-  wateringInterval: number;
-}
+import { G_DefaultPlant, G_GetPlants } from "./_generated-graphql-types.ts";
+
+export type Plant = G_DefaultPlant;

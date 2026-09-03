@@ -23,7 +23,7 @@ const config: CodegenConfig = {
     "./src/_generated-graphql-types.ts": {
       config: {
         // https://www.apollographql.com/docs/react/development-testing/graphql-codegen#recommended-starter-configuration
-        // Apollo Client fragt __typename immer mit ab
+        // Apollo Client fragt __typename IMMER mit ab
         nonOptionalTypename: true,
         // ... aber nicht für die Root-Typen (Query, Mutation)
         skipTypeNameForRoot: true,
