@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-form";
 import IntervalSelector from "./IntervalSelector.tsx";
 import { PlantFormState } from "./PlantFormState.ts";
+import { getDaysUntilWatering } from "./date-utils.ts";
 
 
 const defaultValues: PlantFormState = {
@@ -91,7 +92,7 @@ export default function PlantForm() {
       <form.Field name={"lastWatered"}>
         { (field) => {
           return <div className={"FormControl"}>
-            <label>Standort</label>
+            <label>Zuletzt gewässert</label>
             <input type={"date"}
                   value={field.state.value ?? ""}
                    onBlur={ () => field.handleBlur()}
@@ -101,6 +102,25 @@ export default function PlantForm() {
           </div>
         }}
       </form.Field>
+
+      <form.Subscribe
+        selector={(state) => {
+          console.log("Selector!!!", new Date().toLocaleTimeString())
+          return state.values.lastWatered
+            ? getDaysUntilWatering(
+                state.values.lastWatered,
+                state.values.wateringInterval,
+              )
+            : undefined;
+        }
+        }
+      >
+        {value => {
+          console.log("Rendering ", value, new Date().toLocaleTimeString())
+          return <p>{value}</p>;
+        }}
+
+      </form.Subscribe>
 
       <div className={"FormButtons"}>
         <button
