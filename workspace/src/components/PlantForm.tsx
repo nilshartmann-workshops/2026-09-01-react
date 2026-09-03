@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { useForm } from "@tanstack/react-form";
 import IntervalSelector from "./IntervalSelector.tsx";
+import { PlantFormState } from "./PlantFormState.ts";
 
-type PlantFormState = {
-  name: string,
-  location: string,
-  wateringInterval: number,
-  lastWatered?: string | null,
-}
 
 const defaultValues: PlantFormState = {
     name: "Rose",
     location: "",
     wateringInterval: 1,
-    lastWatered: null, // "2026-09-03" ""
+    lastWatered: undefined, // "2026-09-03" ""
   };
 
 
 export default function PlantForm() {
   const form = useForm({
     defaultValues,
+    validators: {
+      onChange: PlantFormState
+    },
     onSubmit: values => {
       console.log("Aktuelle Daten im Formular", values.value)
     }
@@ -41,6 +39,7 @@ export default function PlantForm() {
             <label>Name der Pflanze</label>
             <input value={field.state.value}
                    onChange={(e) => field.handleChange(e.target.value)} />
+            <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
           </div>
         }}
       </form.Field>
@@ -52,6 +51,8 @@ export default function PlantForm() {
             <label>Standort</label>
             <input value={field.state.value}
                    onChange={(e) => field.handleChange(e.target.value)} />
+            <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
+
           </div>
         }}
         </form.Field>
@@ -73,7 +74,9 @@ export default function PlantForm() {
             <label>Standort</label>
             <input type={"date"}
                   value={field.state.value ?? ""}
-                   onChange={(e) => field.handleChange(e.target.value)} />
+                   onChange={(e) => field.handleChange(
+                     e.target.value === "" ? undefined : e.target.value)
+                   } />
           </div>
         }}
       </form.Field>
@@ -85,6 +88,11 @@ export default function PlantForm() {
         >
           Pflanze hinzufügen 🌱
         </button>
+
+        <button type={"reset"} onClick={() => form.reset()}>
+          Zurücksetzen
+        </button>
+
       </div>
     </form>
   );
