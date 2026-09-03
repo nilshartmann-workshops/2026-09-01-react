@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   createFormHook,
-  createFormHookContexts,
+  createFormHookContexts, formOptions,
   revalidateLogic,
   useForm,
 } from "@tanstack/react-form";
@@ -45,19 +45,72 @@ function TextInput(props: TextInputProps) {
   </div>
 }
 
+const plantFormOptions = formOptions({
+  defaultValues,
+  validationLogic: revalidateLogic(),
+  validators: {
+    onDynamic: PlantFormState,
+    // onBlur: PlantFormState
+  },
+  onSubmit: values => {
+    console.log("Aktuelle Daten im Formular", values.value)
+  }
+})
+
+const GiessSection = withForm({
+    ...plantFormOptions,
+    render: ctx => {
+      const form = ctx.form;
+      return <div className={"border border-green-500 p-4"}>
+        <h2>Gießen</h2>
+        <form.AppField name={"wateringInterval"}>
+          { (field) => {
+            return <div className={"FormControl"}>
+              <label>Gießen alle ... Tage</label>
+              <field.IntervalSelector />
+            </div>
+          }}
+        </form.AppField>
+
+        <form.Field name={"lastWatered"}>
+          { (field) => {
+            return <div className={"FormControl"}>
+              <label>Zuletzt gewässert</label>
+              <input type={"date"}
+                     value={field.state.value ?? ""}
+                     onBlur={ () => field.handleBlur()}
+                     onChange={(e) => field.handleChange(
+                       e.target.value === "" ? undefined : e.target.value)
+                     } />
+            </div>
+          }}
+        </form.Field>
+
+        <form.Subscribe
+          selector={(state) => {
+            console.log("Selector!!!", new Date().toLocaleTimeString())
+            return state.values.lastWatered
+              ? getDaysUntilWatering(
+                state.values.lastWatered,
+                state.values.wateringInterval,
+              )
+              : undefined;
+          }
+          }
+        >
+          {value => {
+            console.log("Rendering ", value, new Date().toLocaleTimeString())
+            return <p>{value}</p>;
+          }}
+
+        </form.Subscribe>
+      </div>
+    }
+  })
+
 
 export default function PlantForm() {
-  const form = useAppForm({
-    defaultValues,
-    validationLogic: revalidateLogic(),
-    validators: {
-      onDynamic: PlantFormState,
-      // onBlur: PlantFormState
-    },
-    onSubmit: values => {
-      console.log("Aktuelle Daten im Formular", values.value)
-    }
-  });
+  const form = useAppForm({...plantFormOptions});
 
   console.log("Rendering Formular", new Date().toLocaleTimeString())
 
@@ -80,47 +133,7 @@ export default function PlantForm() {
         <field.TextInput label={"Standort"}/>
       } />
 
-      <form.AppField name={"wateringInterval"}>
-        { (field) => {
-          return <div className={"FormControl"}>
-            <label>Gießen alle ... Tage</label>
-            <field.IntervalSelector />
-        </div>
-        }}
-      </form.AppField>
-
-      <form.Field name={"lastWatered"}>
-        { (field) => {
-          return <div className={"FormControl"}>
-            <label>Zuletzt gewässert</label>
-            <input type={"date"}
-                  value={field.state.value ?? ""}
-                   onBlur={ () => field.handleBlur()}
-                   onChange={(e) => field.handleChange(
-                     e.target.value === "" ? undefined : e.target.value)
-                   } />
-          </div>
-        }}
-      </form.Field>
-
-      <form.Subscribe
-        selector={(state) => {
-          console.log("Selector!!!", new Date().toLocaleTimeString())
-          return state.values.lastWatered
-            ? getDaysUntilWatering(
-                state.values.lastWatered,
-                state.values.wateringInterval,
-              )
-            : undefined;
-        }
-        }
-      >
-        {value => {
-          console.log("Rendering ", value, new Date().toLocaleTimeString())
-          return <p>{value}</p>;
-        }}
-
-      </form.Subscribe>
+      <GiessSection form={form} />
 
       <div className={"FormButtons"}>
         <button
