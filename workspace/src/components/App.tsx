@@ -5,6 +5,7 @@ import PlantForm from "./PlantForm.tsx";
 import RenderSpielwiese from "../spielwiese/RenderSpielwiese.tsx";
 import PlantList from "./PlantList.tsx";
 import EffektSpielwiese from "../spielwiese/EffektSpielwiese.tsx";
+import FormExample from "./FormExample.tsx";
 
 
 // 1. Render Phase  => virtueller DOM  KEINE Seiteneffekte
@@ -26,7 +27,7 @@ export default function App() {
         <Tab
           tabId={"form"}
         >
-          Neue Pflanze
+          Formular Spielwiese
         </Tab>
         <Tab
           tabId={"render"}
@@ -47,7 +48,7 @@ export default function App() {
           </Suspense>
         </Panel>
         <Panel tabId={"form"} >
-          <PlantForm />
+          <FormExample />
         </Panel>
         <Panel tabId={"render"} >
           <RenderSpielwiese />
