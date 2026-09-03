@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFieldContext } from "./PlantForm.tsx";
 
 
 // Java
@@ -22,7 +23,7 @@ type IntervalSelectorProps = {
   interval: number
   onIntervalChange: (newInterval: number) => void
 }
-export default function IntervalSelector({interval, onIntervalChange}: IntervalSelectorProps) {
+export default function IntervalSelector() {
   // Kontrollierte                     (vs unkontrolliertes)
 
   // Zustand State  (Model)
@@ -37,29 +38,30 @@ export default function IntervalSelector({interval, onIntervalChange}: IntervalS
 
   // const msg = `Sie müssen die Pflanze alle ${interval} Tage gießen`
 
+  const field = useFieldContext<number>()
+
   return (
     <div className={"FormControl"}>
       <label>Gießintervall</label>
       <input
         type={"number"}
-        value={interval}
+        value={field.state.value}
         onChange={(event) => {
-          console.log("1");
-          onIntervalChange(parseInt(event.target.value));
-          console.log("2");
+          field.handleChange(parseInt(event.target.value))
         }}
       />
       <button
         type={"button"}
         className={"primary"}
         onClick={() => {
-          onIntervalChange(interval + 1);
+          field.handleChange(field.state.value+1)
+          // onIntervalChange(interval + 1);
         }}
       >
         {" "}
         +1{" "}
       </button>
-      <IntervalMsg interval={interval} />
+      {/*<IntervalMsg interval={interval} />*/}
     </div>
   );
 }

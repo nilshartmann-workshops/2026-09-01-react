@@ -16,7 +16,7 @@ export const PlantFormState = z.object({
   // vermoegen: z.number(),
   // anlageBetrag: z.number()
 })
-  // .refine(
+  // .sup(
   // (values) => {
   //   if (values.anlageBetrag > values.vermoegen) {
   //     return false;

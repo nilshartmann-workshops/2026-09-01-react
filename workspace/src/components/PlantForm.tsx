@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { revalidateLogic, useForm } from "@tanstack/react-form";
+import {
+  createFormHook,
+  createFormHookContexts,
+  revalidateLogic,
+  useForm,
+} from "@tanstack/react-form";
 import IntervalSelector from "./IntervalSelector.tsx";
 import { PlantFormState } from "./PlantFormState.ts";
 
@@ -12,8 +17,36 @@ const defaultValues: PlantFormState = {
   };
 
 
+
+export const { fieldContext, formContext, useFieldContext, useFormContext } = createFormHookContexts();
+
+export const { useAppForm, withForm } = createFormHook({
+  fieldContext,
+  formContext,
+  fieldComponents: { TextInput, IntervalSelector},
+  formComponents: {},
+});
+
+
+type TextInputProps = {
+  label: string;
+}
+function TextInput(props: TextInputProps) {
+  console.log("Rendering TextInput", props.label, new Date().toLocaleTimeString())
+  const field = useFieldContext<string>()
+
+  return <div className={"FormControl"}>
+    <label>{props.label}</label>
+    <input value={field.state.value}
+           onBlur={ () => field.handleBlur()}
+           onChange={(e) => field.handleChange(e.target.value)} />
+    <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
+  </div>
+}
+
+
 export default function PlantForm() {
-  const form = useForm({
+  const form = useAppForm({
     defaultValues,
     validationLogic: revalidateLogic(),
     validators: {
@@ -25,6 +58,8 @@ export default function PlantForm() {
     }
   });
 
+  console.log("Rendering Formular", new Date().toLocaleTimeString())
+
   // react hook form (Platzhirsch)
   // TanStack Form (neu)
 
@@ -32,45 +67,26 @@ export default function PlantForm() {
     <form onSubmit={e => {
       e.preventDefault();
       e.stopPropagation();
-
       form.handleSubmit();
     }}>
-      <form.Field name={"name"}>
-        { (field) => {
-          return <div className={"FormControl"}>
-            <label>Name der Pflanze</label>
-            <input value={field.state.value}
-                   onBlur={ () => field.handleBlur()}
-                   onChange={(e) => field.handleChange(e.target.value)} />
-            <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
-          </div>
-        }}
-      </form.Field>
 
+      <form.AppField name={"name"} children={field =>
+        <field.TextInput label={"Name der Pflanze"}/>
+      }
+      />
 
-        <form.Field name={"location"}>
-        { (field) => {
-          return <div className={"FormControl"}>
-            <label>Standort</label>
-            <input value={field.state.value}
-                   onBlur={ () => field.handleBlur()}
-                   onChange={(e) => field.handleChange(e.target.value)} />
-            <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
+      <form.AppField name={"location"} children={field =>
+        <field.TextInput label={"Standort"}/>
+      } />
 
-          </div>
-        }}
-        </form.Field>
-
-      <form.Field name={"wateringInterval"}>
+      <form.AppField name={"wateringInterval"}>
         { (field) => {
           return <div className={"FormControl"}>
             <label>Gießen alle ... Tage</label>
-            <IntervalSelector interval={field.state.value}
-                              onIntervalChange={(newInterval) => field.handleChange(newInterval)} />
-
+            <field.IntervalSelector />
         </div>
         }}
-      </form.Field>
+      </form.AppField>
 
       <form.Field name={"lastWatered"}>
         { (field) => {
