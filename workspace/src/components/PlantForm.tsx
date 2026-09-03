@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { useForm } from "@tanstack/react-form";
+import { revalidateLogic, useForm } from "@tanstack/react-form";
 import IntervalSelector from "./IntervalSelector.tsx";
 import { PlantFormState } from "./PlantFormState.ts";
 
 
 const defaultValues: PlantFormState = {
-    name: "Rose",
+    name: "",
     location: "",
     wateringInterval: 1,
     lastWatered: undefined, // "2026-09-03" ""
@@ -15,8 +15,10 @@ const defaultValues: PlantFormState = {
 export default function PlantForm() {
   const form = useForm({
     defaultValues,
+    validationLogic: revalidateLogic(),
     validators: {
-      onChange: PlantFormState
+      onDynamic: PlantFormState,
+      // onBlur: PlantFormState
     },
     onSubmit: values => {
       console.log("Aktuelle Daten im Formular", values.value)
@@ -38,6 +40,7 @@ export default function PlantForm() {
           return <div className={"FormControl"}>
             <label>Name der Pflanze</label>
             <input value={field.state.value}
+                   onBlur={ () => field.handleBlur()}
                    onChange={(e) => field.handleChange(e.target.value)} />
             <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
           </div>
@@ -50,6 +53,7 @@ export default function PlantForm() {
           return <div className={"FormControl"}>
             <label>Standort</label>
             <input value={field.state.value}
+                   onBlur={ () => field.handleBlur()}
                    onChange={(e) => field.handleChange(e.target.value)} />
             <div className={"error-message"}>{field.state.meta.errors[0]?.message}</div>
 
@@ -74,6 +78,7 @@ export default function PlantForm() {
             <label>Standort</label>
             <input type={"date"}
                   value={field.state.value ?? ""}
+                   onBlur={ () => field.handleBlur()}
                    onChange={(e) => field.handleChange(
                      e.target.value === "" ? undefined : e.target.value)
                    } />
